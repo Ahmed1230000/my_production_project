@@ -16,15 +16,35 @@ jobs:
       - name: Setup SSH
         run: |
           mkdir -p ~/.ssh
+
+          # Decode private key safely
           echo "${{ secrets.SSH_PRIVATE_KEY_BASE64 }}" | base64 -d > ~/.ssh/id_ed25519
+
+          # Fix permissions
           chmod 600 ~/.ssh/id_ed25519
+
+          # Add server to known hosts
           ssh-keyscan -H 209.38.35.216 >> ~/.ssh/known_hosts
+
+      - name: Test SSH Connection (Debug)
+        run: |
+          ssh -o StrictHostKeyChecking=no ahmed@209.38.35.216 "echo CONNECTED"
 
       - name: Deploy to Server
         run: |
-          ssh ahmed@209.38.35.216 << 'EOF'
+          ssh -o StrictHostKeyChecking=no ahmed@209.38.35.216 << 'EOF'
+            set -e
+
             cd /var/www/shopping_project
-            git pull
+
+            echo "📦 Pulling latest code..."
+            git pull origin main
+
+            echo "📦 Installing dependencies..."
             composer install --no-interaction --prefer-dist --optimize-autoloader
+
+            echo "🛠 Running migrations..."
             php artisan migrate --force
+
+            echo "🚀 Deployment done!"
           EOF
