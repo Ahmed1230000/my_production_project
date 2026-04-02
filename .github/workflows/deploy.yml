@@ -17,16 +17,17 @@ jobs:
         run: |
           mkdir -p ~/.ssh
 
-          # Decode private key safely
-          echo "${{ secrets.SSH_PRIVATE_KEY_BASE64 }}" | base64 -d > ~/.ssh/id_ed25519
+          # Write private key correctly
+          cat << 'EOF' > ~/.ssh/id_ed25519
+${{ secrets.SSH_PRIVATE_KEY }}
+EOF
 
-          # Fix permissions
           chmod 600 ~/.ssh/id_ed25519
 
           # Add server to known hosts
           ssh-keyscan -H 209.38.35.216 >> ~/.ssh/known_hosts
 
-      - name: Test SSH Connection (Debug)
+      - name: Test SSH Connection
         run: |
           ssh -o StrictHostKeyChecking=no ahmed@209.38.35.216 "echo CONNECTED"
 
