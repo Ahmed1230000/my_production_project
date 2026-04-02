@@ -16,15 +16,8 @@ jobs:
       - name: Setup SSH
         run: |
           mkdir -p ~/.ssh
-
-          # Write private key correctly
-          cat << 'EOF' > ~/.ssh/id_ed25519
-${{ secrets.SSH_PRIVATE_KEY }}
-EOF
-
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
-
-          # Add server to known hosts
           ssh-keyscan -H 209.38.35.216 >> ~/.ssh/known_hosts
 
       - name: Test SSH Connection
@@ -33,19 +26,11 @@ EOF
 
       - name: Deploy to Server
         run: |
-          ssh -o StrictHostKeyChecking=no ahmed@209.38.35.216 << 'EOF'
+          ssh -o StrictHostKeyChecking=no ahmed@209.38.35.216 << EOF
             set -e
-
             cd /var/www/shopping_project
-
-            echo "📦 Pulling latest code..."
             git pull origin main
-
-            echo "📦 Installing dependencies..."
             composer install --no-interaction --prefer-dist --optimize-autoloader
-
-            echo "🛠 Running migrations..."
             php artisan migrate --force
-
-            echo "🚀 Deployment done!"
+            echo "Deployment done!"
           EOF
