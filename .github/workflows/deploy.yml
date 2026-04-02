@@ -22,7 +22,7 @@ jobs:
           ls -la ~/.ssh
           echo "=== FIRST LINE ==="
           head -n 1 ~/.ssh/id_ed25519
-          ssh-keyscan -H 209.38.35.216 >> ~/.ssh/known_hosts
+          ssh-keyscan -p 2222 -H 209.38.35.216 >> ~/.ssh/known_hosts
 
       - name: Test SSH
         run: |
