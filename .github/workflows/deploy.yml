@@ -13,12 +13,18 @@ jobs:
       - name: Get Code
         uses: actions/checkout@v3
 
-      - name: Setup SSH
+     - name: Setup SSH (Debug)
         run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
-          chmod 600 ~/.ssh/id_ed25519
-          ssh-keyscan -H 209.38.35.216 >> ~/.ssh/known_hosts
+            set -x
+            mkdir -p ~/.ssh
+            echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
+            echo "==== FILE CONTENT ===="
+            cat ~/.ssh/id_ed25519
+            echo "==== PERMISSIONS ===="
+            ls -la ~/.ssh
+            chmod 600 ~/.ssh/id_ed25519
+            ssh-keyscan -H 209.38.35.216 >> ~/.ssh/known_hosts
+            echo "==== DONE SSH SETUP ===="
 
       - name: Test SSH Connection
         run: |
