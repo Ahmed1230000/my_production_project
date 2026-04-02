@@ -13,26 +13,32 @@ jobs:
       - name: Get Code
         uses: actions/checkout@v3
 
-      - name: Setup SSH Debug
+      - name: Setup SSH
         run: |
           mkdir -p ~/.ssh
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
-          echo "=== FILE EXISTS ==="
-          ls -la ~/.ssh
-          echo "=== FIRST LINE ==="
-          head -n 1 ~/.ssh/id_ed25519
           ssh-keyscan -p 2222 -H 209.38.35.216 >> ~/.ssh/known_hosts
 
-      - name: Test SSH
+      - name: Test SSH Connection
         run: |
-          ssh -o StrictHostKeyChecking=no ahmed@209.38.35.216 "echo CONNECTED"
+          ssh -p 2222 -o StrictHostKeyChecking=no ahmed@209.38.35.216 "echo CONNECTED"
 
-      - name: Deploy
+      - name: Deploy to Server
         run: |
-          ssh -o StrictHostKeyChecking=no ahmed@209.38.35.216 << EOF
+          ssh -p 2222 -o StrictHostKeyChecking=no ahmed@209.38.35.216 << EOF
+            set -e
+
             cd /var/www/shopping_project
+
+            echo "📦 Pulling latest code..."
             git pull origin main
+
+            echo "📦 Installing dependencies..."
             composer install --no-interaction --prefer-dist --optimize-autoloader
+
+            echo "🛠 Running migrations..."
             php artisan migrate --force
+
+            echo "🚀 Deployment done!"
           EOF
