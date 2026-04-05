@@ -27,8 +27,9 @@ jobs:
           cd /var/www/my_production_project
           echo "🔐 Fix git safe directory..."
           git config --global --add safe.directory /var/www/my_production_project
-          echo "📦 Pulling latest code..."
-          git pull origin main
+          echo "📦 Sync code..."
+          git fetch origin
+          git reset --hard origin/main
           echo "📦 Installing dependencies..."
           composer install --no-interaction --prefer-dist --optimize-autoloader
           echo "🛠 Running migrations..."
