@@ -84,7 +84,7 @@ class RoleAndPermissionSeeder extends Seeder
 
                     $permissionName = $permission . '-' . $action;
 
-                    $perm = Permission::findByName($permissionName, self::GUARD_NAME);
+                    $perm = Permission::firstOrCreate(['name' => $permissionName, 'guard_name' => self::GUARD_NAME]);
 
                     $role->givePermissionTo($perm);
                 }
@@ -103,7 +103,6 @@ class RoleAndPermissionSeeder extends Seeder
                 $perm = Permission::findByName($permissionName, self::GUARD_NAME);
 
                 $user->givePermissionTo($perm);
-
             }
         }
     }
