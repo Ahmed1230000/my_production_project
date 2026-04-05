@@ -46,8 +46,6 @@ jobs:
             php artisan view:cache
 
            echo "🔐 Fix permissions..."
-           chown -R www-data:www-data storage bootstrap/cache
-           chown www-data:www-data storage/oauth-*.key
            chmod -R 775 storage bootstrap/cache
            chmod 600 storage/oauth-*.key
 
