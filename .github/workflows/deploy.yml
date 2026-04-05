@@ -45,9 +45,11 @@ jobs:
             php artisan route:cache
             php artisan view:cache
 
-            echo "🔐 Fix permissions..."
-            chmod -R 775 storage bootstrap/cache
-            chmod 600 storage/oauth-*.key
+           echo "🔐 Fix permissions..."
+           chown -R www-data:www-data storage bootstrap/cache
+           chown www-data:www-data storage/oauth-*.key
+           chmod -R 775 storage bootstrap/cache
+           chmod 600 storage/oauth-*.key
 
             echo "🚀 Deployment done!"
           EOF
