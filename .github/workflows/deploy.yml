@@ -30,6 +30,10 @@ jobs:
             echo "🔐 Fix git safe directory..."
             git config --global --add safe.directory /var/www/my_production_project
 
+            echo "🔧 Fix permissions for git..."
+            sudo chown -R ahmed:www-data /var/www/my_production_project
+            sudo chmod -R 775 /var/www/my_production_project
+
             echo "📦 Pulling latest code..."
             git pull origin main
 
@@ -39,18 +43,15 @@ jobs:
             echo "🛠 Running migrations..."
             php artisan migrate --force
 
-            echo "⚡ Clearing & caching..."
-            php artisan config:clear
-            php artisan cache:clear
+            echo "⚡ Caching..."
             php artisan config:cache
             php artisan route:cache
             php artisan view:cache
 
-            echo "🔐 Fix permissions..."
-            chown -R www-data:www-data .
-            chmod -R 775 storage bootstrap/cache
-            chmod -R 775 storage/logs
-            chmod 600 storage/oauth-*.key
+            echo "🔐 Fix runtime permissions..."
+            sudo chown -R www-data:www-data storage bootstrap/cache
+            sudo chmod -R 775 storage bootstrap/cache
+            sudo chmod 600 storage/oauth-*.key
 
             echo "🚀 Deployment done!"
           EOF
