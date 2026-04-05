@@ -23,20 +23,31 @@ jobs:
       - name: Deploy to Server
         run: |
           ssh -p 2222 -o StrictHostKeyChecking=no ahmed@209.38.35.216 << 'EOF'
-          set -e
-          cd /var/www/my_production_project
-          echo "🔐 Fix git safe directory..."
-          git config --global --add safe.directory /var/www/my_production_project
-          echo "📦 Sync code..."
-          git fetch origin
-          git reset --hard origin/main
-          echo "📦 Installing dependencies..."
-          composer install --no-interaction --prefer-dist --optimize-autoloader
-          echo "🛠 Running migrations..."
-          php artisan migrate --force
-          echo "⚡ Caching..."
-          php artisan config:cache
-          php artisan route:cache
-          php artisan view:cache
-          echo "🚀 Deployment done!"
+            set -e
+
+            cd /var/www/my_production_project
+
+            echo "🔐 Fix git safe directory..."
+            git config --global --add safe.directory /var/www/my_production_project
+
+            echo "📦 Sync code..."
+            git fetch origin
+            git reset --hard origin/main
+
+            echo "📦 Installing dependencies..."
+            composer install --no-interaction --prefer-dist --optimize-autoloader
+
+            echo "🛠 Running migrations..."
+            php artisan migrate --force
+
+            echo "⚡ Caching..."
+            php artisan config:cache
+            php artisan route:cache
+            php artisan view:cache
+
+            echo "🔐 Fix permissions..."
+            chmod -R 775 storage bootstrap/cache
+            chmod 600 storage/oauth-*.key
+
+            echo "🚀 Deployment done!"
           EOF
