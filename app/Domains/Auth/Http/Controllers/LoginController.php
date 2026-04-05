@@ -63,7 +63,7 @@ class LoginController extends Controller
             ], 'error');
 
             return $this->apiResponse(
-                'Something went wrong',
+                'Something went wrong' . ' ' . $e->getMessage(),
                 '',
                 500
             );
