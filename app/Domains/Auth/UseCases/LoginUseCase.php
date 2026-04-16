@@ -28,21 +28,14 @@ class LoginUseCase
             throw new InvalidCredentialsException("Invalid credentials");
         }
 
-        if (!$this->hashService->check($dto->password, $user->password)) {
-            throw new InvalidCredentialsException("Invalid credentials");
-        }
-
         $user->ensureCanLogin();
 
-        $token = $this->tokenService->generateToken($user->id);
-        $model = $this->userRepository->findByEmailWithRolesAndPermissions($dto->email);
-
-
+        $token = $this->tokenService->generateToken($dto->email, $dto->password);
 
         return new AuthResultDTO(
             user: $user,
-            accessToken: $token,
-            userModel: $model,
+            accessToken: $token['access_token'],
+            refreshToken: $token['refresh_token'],
         );
     }
 }

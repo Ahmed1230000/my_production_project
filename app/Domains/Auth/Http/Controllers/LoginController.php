@@ -36,8 +36,9 @@ class LoginController extends Controller
 
             return $this->apiResponse(
                 [
-                    'user'  => UserResource::make($result->userModel),
-                    'token' => $result->accessToken
+                    'user'  => UserResource::make($result->user),
+                    'token' => $result->accessToken,
+                    'refresh_token' => $result->refreshToken,
                 ],
                 'User logged in successfully',
                 200,
