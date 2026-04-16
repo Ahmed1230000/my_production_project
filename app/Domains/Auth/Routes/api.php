@@ -28,9 +28,9 @@ Route::get('/email/verify/{id}/{hash}', [EmailVerificationController::class, 've
     ->middleware(['signed', 'throttle:6,1'])
     ->name('verification.verify');
 
-// Route::post('/auth/refresh-token', [RefreshTokenController::class, 'refresh']);
 
 Route::middleware('auth:api')->group(function () {
     Route::post('/logout', LogoutController::class);
 });
 
+Route::post('/auth/refresh-token', [RefreshTokenController::class, 'refresh']);

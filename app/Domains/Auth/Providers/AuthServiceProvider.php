@@ -49,6 +49,7 @@ class AuthServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
+        Passport::enablePasswordGrant();
         $this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
         Route::middleware('api')
             ->prefix('api')
