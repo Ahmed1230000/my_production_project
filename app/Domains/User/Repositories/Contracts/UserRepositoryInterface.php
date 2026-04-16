@@ -9,10 +9,10 @@ use App\Models\User;
 
 interface UserRepositoryInterface
 {
+    public function update(UserEntity $user): UserEntity;
     public function create(UserEntity $user): UserEntity;
     public function findByEmail(string $email): ?UserEntity;
     public function findById(int $id): ?UserEntity;
-    public function update(UserEntity $user): UserEntity;
 
     public function findWithRolesAndPermissions(int $id): User;
     public function findByEmailWithRolesAndPermissions(string $email): ?User;

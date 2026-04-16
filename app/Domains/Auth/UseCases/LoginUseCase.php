@@ -32,13 +32,7 @@ class LoginUseCase
             throw new InvalidCredentialsException("Invalid credentials");
         }
 
-        if ($user->status !== 'active') {
-            throw new EmailNotVerifiedException("Please verify your email");
-        }
-
-        if (!$user->emailVerifiedAt) {
-            throw new EmailNotVerifiedException("Please verify your email");
-        }
+        $user->ensureCanLogin();
 
         $token = $this->tokenService->generateToken($user->id);
         $model = $this->userRepository->findByEmailWithRolesAndPermissions($dto->email);

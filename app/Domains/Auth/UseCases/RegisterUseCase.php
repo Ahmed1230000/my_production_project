@@ -8,6 +8,7 @@ use App\Domains\Auth\Exceptions\UserAlreadyExistsException;
 use App\Domains\Auth\Repositories\Contracts\EventDispatcherInterface;
 use App\Domains\User\Entities\UserEntity;
 use App\Domains\User\Repositories\Contracts\UserRepositoryInterface;
+use Illuminate\Support\Facades\DB;
 
 class RegisterUseCase
 {

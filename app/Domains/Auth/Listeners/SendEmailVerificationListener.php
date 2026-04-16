@@ -12,6 +12,8 @@ use Illuminate\Queue\InteractsWithQueue;
 class SendEmailVerificationListener implements ShouldQueue
 {
     use InteractsWithQueue;
+
+    public $afterCommit = true;
     /**
      * Create the event listener.
      */

@@ -11,7 +11,8 @@ class LaravelPasswordResetService implements PasswordResetServiceInterface
 {
     public function sendResetLinkEmail(string $email): bool
     {
-        return Password::sendResetLink(['email' => $email]) === Password::RESET_LINK_SENT;
+        $status = Password::sendResetLink(['email' => $email]) === Password::RESET_LINK_SENT;
+        return $status;
     }
 
     public function resetPassword(string $token, string $email, string $password): bool
@@ -28,7 +29,11 @@ class LaravelPasswordResetService implements PasswordResetServiceInterface
                 ])->save();
             }
         );
+        // dd($status);
 
+        if ($status !== Password::PASSWORD_RESET) {
+            throw new \Exception("Invalid or expired token");
+        }
         return $status === Password::PASSWORD_RESET;
     }
 }

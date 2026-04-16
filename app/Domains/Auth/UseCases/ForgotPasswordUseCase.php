@@ -3,16 +3,15 @@
 namespace App\Domains\Auth\UseCases;
 
 use App\Domains\Auth\DTOs\ForgotPasswordDTO;
+use App\Domains\Auth\Jobs\SendPasswordResetEmailJob;
 use App\Domains\Auth\Repositories\Contracts\PasswordResetServiceInterface;
 
 class ForgotPasswordUseCase
 {
-    public function __construct(
-        private readonly PasswordResetServiceInterface $passwordResetService
-    ) {}
+    public function __construct() {}
 
-    public function execute(ForgotPasswordDTO $dto): bool
+    public function execute(ForgotPasswordDTO $dto)
     {
-        return $this->passwordResetService->sendResetLinkEmail($dto->email->getEmail());
+        return SendPasswordResetEmailJob::dispatch($dto->email->getEmail());
     }
 }

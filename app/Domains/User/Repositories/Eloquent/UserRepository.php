@@ -6,6 +6,7 @@ use App\Domains\Authorization\ValueObjects\RoleVO\RoleNameVO;
 use App\Domains\User\Entities\UserEntity;
 use App\Domains\User\Repositories\Contracts\UserRepositoryInterface;
 use App\Models\User;
+use DateTimeImmutable;
 
 class UserRepository implements UserRepositoryInterface
 {
@@ -20,7 +21,7 @@ class UserRepository implements UserRepositoryInterface
             emailVerifiedAt: $model->email_verified_at,
             created_at: $model->created_at,
             updated_at: $model->updated_at,
-
+            deleted_at: $model->deleted_at,
         );
     }
     public function create(UserEntity $user): UserEntity
@@ -59,12 +60,18 @@ class UserRepository implements UserRepositoryInterface
             throw new \Exception("User not found");
         }
         $model->update([
-            'name' => $user->getName(),
-            'email' => $user->getEmail(),
-            'password' => $user->getPassword(),
-            'status' => $user->getStatus(),
+            'name'              => $user->getName(),
+            'email'             => $user->getEmail(),
+            'password'          => $user->getPassword(),
+            'status'            => $user->getStatus(),
             'email_verified_at' => $user->getEmailVerifiedAt(),
+            'deleted_at'        => $user->deleted_at,
         ]);
+        $model->deleted_at = $user->deleted_at;
+
+        $model->save();
+        $model->refresh();
+
         return $this->mapToEntity($model);
     }
 

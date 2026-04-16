@@ -2,6 +2,10 @@
 
 namespace App\Domains\User\Entities;
 
+use App\Domains\User\Enums\UserStatusEnum;
+use App\Domains\User\Exceptions\UserDomainException;
+use Carbon\Carbon;
+
 class UserEntity
 {
     public function __construct(
@@ -13,10 +17,9 @@ class UserEntity
         public ?string $emailVerifiedAt = null,
         public ?string $created_at = null,
         public ?string $updated_at = null,
+        public ?Carbon $deleted_at = null,
         public array $roles = [],
         public array $permissions = []
-
-
     ) {}
 
     public function getId(): ?int
@@ -69,5 +72,24 @@ class UserEntity
     public function getPermissions(): array
     {
         return $this->permissions;
+    }
+    public function ensureCanLogin(): void
+    {
+        if ($this->status !== UserStatusEnum::ACTIVE->value) {
+            throw new UserDomainException("USER_NOT_ACTIVE");
+        }
+
+        if (!$this->emailVerifiedAt) {
+            throw new UserDomainException("EMAIL_NOT_VERIFIED");
+        }
+    }
+    public function deactivate()
+    {
+        if ($this->status === UserStatusEnum::DEACTIVATED->value) {
+            throw new UserDomainException("User is already deactivated or deleted.");
+        }
+
+        $this->status = UserStatusEnum::DEACTIVATED->value;
+        $this->deleted_at = now(); // Set the current timestamp for soft deletion
     }
 }
