@@ -10,17 +10,11 @@ class PasswordVO
     public function __construct(private string $password)
     {
         $this->validatePassword($password);
-        $this->password = password_hash($password, PASSWORD_BCRYPT);
     }
 
     public function value(): string
     {
         return $this->password;
-    }
-
-    public function Hash(): string
-    {
-        return Hash::make($this->password);
     }
 
     private function validatePassword(string $password): void

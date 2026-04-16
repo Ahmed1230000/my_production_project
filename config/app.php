@@ -123,4 +123,11 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+
+    // Other configurations...
+    /**
+     * Frontend URL for email verification and password reset links
+     */
+    'frontend_url' => env('FRONTEND_URL'),
+
 ];
