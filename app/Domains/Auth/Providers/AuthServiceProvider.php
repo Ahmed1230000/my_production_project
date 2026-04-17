@@ -58,5 +58,8 @@ class AuthServiceProvider extends ServiceProvider
         Passport::tokensExpireIn(now()->addMinutes(3));
         Passport::refreshTokensExpireIn(now()->addDays(7));
         Event::subscribe(SendEmailVerificationListener::class);
+
+        Passport::tokensExpireIn(now()->addDays(30));
+        Passport::refreshTokensExpireIn(now()->addDays(60));
     }
 }
